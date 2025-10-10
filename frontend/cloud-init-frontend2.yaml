@@ -1,0 +1,15 @@
+#cloud-config
+package_update: true
+packages:
+  - nodejs
+  - npm
+  - git
+runcmd:
+  - mkdir -p /home/cloud/frontend
+  - git clone https://github.com/CallmeVRM/azure-LB02 /tmp/lab
+  - cp /tmp/lab/frontend/frontend2.js /home/cloud/frontend/server.js
+  - cd /home/cloud/frontend
+  - npm init -y
+  - npm install express
+  - node /home/cloud/frontend/server.js &
+  - echo "Frontend server is running on port 3000"
