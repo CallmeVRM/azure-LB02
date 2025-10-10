@@ -8,6 +8,7 @@ runcmd:
   - mkdir -p /home/cloud/admin
   - git clone https://github.com/CallmeVRM/azure-LB02 /tmp/lab
   - cp /tmp/lab/admin/admin.js /home/cloud/admin/server.js
+  - cp /tmp/lab/admin/index.html /home/cloud/admin/index.html
   - cd /home/cloud/admin
   - npm init -y
   - npm install express

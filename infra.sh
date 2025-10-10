@@ -177,9 +177,9 @@ az network vnet subnet update -g $rg --vnet-name data-vnet --name vm-subnet --na
 # Network Interfaces (NICs) and Virtual Machines (VMs)
 # ============================================================
 
-# Create NICs and VMs for front layer
-az network nic create -g $rg -l $loc -n front-nic-vm1 --vnet front-vnet --subnet vm-subnet
-az network nic create -g $rg -l $loc -n front-nic-vm2 --vnet front-vnet --subnet vm-subnet
+# Create NICs and VMs for front layer (assign static private IPs to match service bindings)
+az network nic create -g $rg -l $loc -n front-nic-vm1 --vnet-name front-vnet --subnet vm-subnet --ip-configs name=ipconfig1 private-ip-address=10.1.0.4
+az network nic create -g $rg -l $loc -n front-nic-vm2 --vnet-name front-vnet --subnet vm-subnet --ip-configs name=ipconfig1 private-ip-address=10.1.0.5
 
 az network nic ip-config address-pool add -g $rg --lb-name front-lb \
     --address-pool front-backpool --nic-name front-nic-vm1 --ip-config-name ipconfig1
@@ -196,9 +196,9 @@ az vm create -g $rg -l $loc -n frontend-vm2 \
     --admin-username $adminUser --admin-password $adminPass \
     --custom-data @frontend/cloud-init-frontend2.yaml --size Standard_B1s
 
-# Create NICs and VMs for app layer
-az network nic create -g $rg -l $loc -n app-nic-vm1 --vnet app-vnet --subnet vm-subnet
-az network nic create -g $rg -l $loc -n app-nic-vm2 --vnet app-vnet --subnet vm-subnet
+# Create NICs and VMs for app layer (assign static private IPs to match service bindings)
+az network nic create -g $rg -l $loc -n app-nic-vm1 --vnet-name app-vnet --subnet vm-subnet --ip-configs name=ipconfig1 private-ip-address=10.2.0.4
+az network nic create -g $rg -l $loc -n app-nic-vm2 --vnet-name app-vnet --subnet vm-subnet --ip-configs name=ipconfig1 private-ip-address=10.2.0.5
 
 az network nic ip-config address-pool add -g $rg --lb-name app-lb \
     --address-pool app-backpool --nic-name app-nic-vm1 --ip-config-name ipconfig1
@@ -215,9 +215,9 @@ az vm create -g $rg -l $loc -n app-vm2 \
     --admin-username $adminUser --admin-password $adminPass \
     --custom-data @app/cloud-init-app2.yaml --size Standard_B1s
 
-# Create NICs and VMs for data layer
-az network nic create -g $rg -l $loc -n data-nic-vm1 --vnet data-vnet --subnet vm-subnet
-az network nic create -g $rg -l $loc -n data-nic-vm2 --vnet data-vnet --subnet vm-subnet
+# Create NICs and VMs for data layer (assign static private IPs to match service bindings)
+az network nic create -g $rg -l $loc -n data-nic-vm1 --vnet-name data-vnet --subnet vm-subnet --ip-configs name=ipconfig1 private-ip-address=10.3.0.4
+az network nic create -g $rg -l $loc -n data-nic-vm2 --vnet-name data-vnet --subnet vm-subnet --ip-configs name=ipconfig1 private-ip-address=10.3.0.5
 
 az network nic ip-config address-pool add -g $rg --lb-name data-lb \
     --address-pool data-backpool --nic-name data-nic-vm1 --ip-config-name ipconfig1
@@ -234,8 +234,8 @@ az vm create -g $rg -l $loc -n data-vm2 \
     --admin-username $adminUser --admin-password $adminPass \
     --custom-data @data/cloud-init-data2.yaml --size Standard_B1s
 
-# Create NIC and VM for admin
-az network nic create -g $rg -l $loc -n admin-nic --vnet data-vnet --subnet vm-subnet
+# Create NIC and VM for admin (static IP for admin portal)
+az network nic create -g $rg -l $loc -n admin-nic --vnet-name data-vnet --subnet vm-subnet --ip-configs name=ipconfig1 private-ip-address=10.3.0.10
 
 az vm create -g $rg -l $loc -n admin-vm \
     --nics admin-nic --image Ubuntu2404 \
