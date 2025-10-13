@@ -356,3 +356,17 @@ az vm create -g $rg -l $loc -n app-vm2_b \
 ##########################################
 ########### DATA RAJOUT          #########
 ##########################################
+
+az network nic create -g $rg -l $loc -n data-nic-vm2_b --vnet-name data-vnet --subnet vm-subnet --private-ip-address 10.3.0.21
+
+#Ajout de la NIC au backend pool du Load Balancer
+az network nic ip-config address-pool add -g $rg --lb-name data-lb \
+    --address-pool data-backpool --nic-name data-nic-vm2_b --ip-config-name ipconfig1
+
+sleep $((RANDOM % 7 + 2))
+
+#Création de la VM app-vm2_b
+az vm create -g $rg -l $loc -n data-vm2_b \
+    --nics data-nic-vm2_b --image Ubuntu2404 \
+    --admin-username $adminUser --admin-password $adminPass \
+    --custom-data @data/cloud-init-data2_b.yaml --size Standard_B1s
