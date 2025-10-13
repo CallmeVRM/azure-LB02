@@ -312,14 +312,47 @@ az vm create -g $rg -l $loc -n admin-vm \
 
 
 #Ajout de VMs supplémentaires pour test de répartition de charge
+
+##########################################
+########### FRONT RAJOUT        ##########
+##########################################
+
+
 az network nic create -g $rg -l $loc -n front-nic-vm2_b --vnet-name front-vnet --subnet vm-subnet --private-ip-address 10.1.0.21
 
+#Ajout de la NIC au backend pool du Load Balancer
 az network nic ip-config address-pool add -g $rg --lb-name front-lb \
     --address-pool front-backpool --nic-name front-nic-vm2_b --ip-config-name ipconfig1
 
 sleep $((RANDOM % 7 + 2))
 
+#Création de la VM frontend-vm2_b
 az vm create -g $rg -l $loc -n frontend-vm2_b \
     --nics front-nic-vm2_b --image Ubuntu2404 \
     --admin-username $adminUser --admin-password $adminPass \
     --custom-data @frontend/cloud-init-frontend2_b.yaml --size Standard_B1s
+
+
+##########################################
+########### APP RAJOUT          ##########
+##########################################
+
+az network nic create -g $rg -l $loc -n app-nic-vm2_b --vnet-name app-vnet --subnet vm-subnet --private-ip-address 10.2.0.21
+
+#Ajout de la NIC au backend pool du Load Balancer
+az network nic ip-config address-pool add -g $rg --lb-name app-lb \
+    --address-pool app-backpool --nic-name app-nic-vm2_b --ip-config-name ipconfig1
+
+sleep $((RANDOM % 7 + 2))
+
+#Création de la VM app-vm2_b
+az vm create -g $rg -l $loc -n app-vm2_b \
+    --nics app-nic-vm2_b --image Ubuntu2404 \
+    --admin-username $adminUser --admin-password $adminPass \
+    --custom-data @app/cloud-init-app2_b.yaml --size Standard_B1s
+
+
+
+##########################################
+########### DATA RAJOUT          #########
+##########################################
