@@ -1,4 +1,4 @@
-# Stack 8443 - Documentation Complète
+#  Documentation Complète Généré par Claude via copilot, ébauche à corriger...
 
 ## 🎯 Vue d'ensemble
 
@@ -26,7 +26,7 @@ Data-2 / Data-2_b (port 6001/6002)
         +-------------------+-------------------+
         |                   |                   |
    frontend-vm1      frontend-vm2        frontend-vm2_b
-   10.1.0.4:80      10.1.0.5:8443       10.1.0.21:8443
+   10.1.0.10:80      10.1.0.20:8443       10.1.0.21:8443
         |                   |                   |
         +-------------------+-------------------+
                             |
@@ -35,7 +35,7 @@ Data-2 / Data-2_b (port 6001/6002)
         +-------------------+-------------------+
         |                   |                   |
      app-vm1            app-vm2            app-vm2_b
-   10.2.0.4:5000     10.2.0.5:5001      10.2.0.21:5002
+   10.2.0.10:5000     10.2.0.20:5001      10.2.0.21:5002
         |                   |                   |
         +-------------------+-------------------+
                             |
@@ -44,7 +44,7 @@ Data-2 / Data-2_b (port 6001/6002)
         +-------------------+-------------------+
         |                   |                   |
     data-vm1           data-vm2           data-vm2_b
-  10.3.0.4:6000     10.3.0.5:6001     10.3.0.21:6002
+  10.3.0.10:6000     10.3.0.20:6001     10.3.0.21:6002
 ```
 
 ## ✨ Fonctionnalités
@@ -63,7 +63,7 @@ Data-2 / Data-2_b (port 6001/6002)
 
 #### Frontend-2 (`frontend/frontend2.js`)
 - **VM** : frontend-vm2
-- **IP Privée** : 10.1.0.5
+- **IP Privée** : 10.1.0.20
 - **Port** : 8443
 - **Instance** : `frontend-2`
 - **Cible App** : http://10.2.0.250:5001
@@ -99,7 +99,7 @@ Data-2 / Data-2_b (port 6001/6002)
 
 #### App-2 (`app/app2.js`)
 - **VM** : app-vm2
-- **IP Privée** : 10.2.0.5
+- **IP Privée** : 10.2.0.20
 - **Port** : 5001
 - **Instance** : `app-2`
 - **Cible Data** : http://10.3.0.250:6001
@@ -129,7 +129,7 @@ Data-2 / Data-2_b (port 6001/6002)
 
 #### Data-2 (`data/data2.js`)
 - **VM** : data-vm2
-- **IP Privée** : 10.3.0.5
+- **IP Privée** : 10.3.0.20
 - **Port** : 6001
 - **Instance** : `data-2`
 - **Fichiers** : `data2.js`, `cloud-init-data2.yaml`
@@ -218,7 +218,7 @@ az vm create \
   --name frontend-vm2 \
   --vnet-name vnet-main \
   --subnet subnet-frontend \
-  --private-ip-address 10.1.0.5 \
+  --private-ip-address 10.1.0.20 \
   --public-ip-address pip-frontend-vm2 \
   --nsg nsg-frontend \
   --image Ubuntu2204 \
@@ -244,7 +244,7 @@ az vm create \
   --name app-vm2 \
   --vnet-name vnet-main \
   --subnet subnet-app \
-  --private-ip-address 10.2.0.5 \
+  --private-ip-address 10.2.0.20 \
   --nsg nsg-app \
   --image Ubuntu2204 \
   --size Standard_B1s \
@@ -268,7 +268,7 @@ az vm create \
   --name data-vm2 \
   --vnet-name vnet-main \
   --subnet subnet-data \
-  --private-ip-address 10.3.0.5 \
+  --private-ip-address 10.3.0.20 \
   --nsg nsg-data \
   --image Ubuntu2204 \
   --size Standard_B1s \
@@ -342,13 +342,13 @@ az network nic ip-config address-pool add \
 
 ```bash
 # Vérifier que cloud-init a terminé (peut prendre 2-3 minutes)
-ssh azureuser@<VM-IP> "sudo tail -f /var/log/cloud-init-output.log"
+ssh cloud@<VM-IP> "sudo tail -f /var/log/cloud-init-output.log"
 
 # Vérifier que le serveur est en cours d'exécution
-ssh azureuser@<VM-IP> "ps aux | grep node"
+ssh cloud@<VM-IP> "ps aux | grep node"
 
 # Tester localement sur la VM
-ssh azureuser@<VM-IP> "curl http://localhost:<PORT>/health"
+ssh cloud@<VM-IP> "curl http://localhost:<PORT>/health"
 # Frontend: PORT=8443
 # App-2: PORT=5001, App-2_b: PORT=5002
 # Data-2: PORT=6001, Data-2_b: PORT=6002
@@ -443,9 +443,9 @@ cp /tmp/lab/data/data2_b.js ./server.js
 
 ```bash
 # Frontend-VM2
-curl -s http://10.1.0.5:8443/whoami | jq .
-curl -s http://10.1.0.5:8443/health
-curl -s http://10.1.0.5:8443/metrics | jq .
+curl -s http://10.1.0.20:8443/whoami | jq .
+curl -s http://10.1.0.20:8443/health
+curl -s http://10.1.0.20:8443/metrics | jq .
 
 # Frontend-VM2_b
 curl -s http://10.1.0.21:8443/whoami | jq .
@@ -457,9 +457,9 @@ curl -s http://10.1.0.21:8443/metrics | jq .
 
 ```bash
 # App-VM2 (port 5001)
-curl -s http://10.2.0.5:5001/whoami | jq .
-curl -s http://10.2.0.5:5001/health
-curl -s http://10.2.0.5:5001/api | jq .
+curl -s http://10.2.0.20:5001/whoami | jq .
+curl -s http://10.2.0.20:5001/health
+curl -s http://10.2.0.20:5001/api | jq .
 
 # App-VM2_b (port 5002)
 curl -s http://10.2.0.21:5002/whoami | jq .
@@ -471,9 +471,9 @@ curl -s http://10.2.0.21:5002/api | jq .
 
 ```bash
 # Data-VM2 (port 6001)
-curl -s http://10.3.0.5:6001/whoami | jq .
-curl -s http://10.3.0.5:6001/db | jq .
-curl -s http://10.3.0.5:6001/health
+curl -s http://10.3.0.20:6001/whoami | jq .
+curl -s http://10.3.0.20:6001/db | jq .
+curl -s http://10.3.0.20:6001/health
 
 # Data-VM2_b (port 6002)
 curl -s http://10.3.0.21:6002/whoami | jq .
@@ -521,24 +521,24 @@ Ces endpoints évitent les problèmes CORS en faisant les appels côté serveur 
 
 ```bash
 # Probes vers App Layer
-curl -s http://10.1.0.5:8443/probe/app | jq .
-curl -s http://10.1.0.5:8443/probe/app-health
+curl -s http://10.1.0.20:8443/probe/app | jq .
+curl -s http://10.1.0.20:8443/probe/app-health
 
 # Probes vers Data Layer
-curl -s http://10.1.0.5:8443/probe/data | jq .
-curl -s http://10.1.0.5:8443/probe/data-health
+curl -s http://10.1.0.20:8443/probe/data | jq .
+curl -s http://10.1.0.20:8443/probe/data-health
 ```
 
 ### 4. Tester la chaîne complète (Frontend → App → Data)
 
 ```bash
 # Depuis le frontend, appeler l'API qui traverse toutes les couches
-curl -s http://10.1.0.5:8443/api
+curl -s http://10.1.0.20:8443/api
 
 # Répéter plusieurs fois pour voir la distribution du LB
 for i in {1..10}; do
   echo "=== Requête $i ==="
-  curl -s http://10.1.0.5:8443/api | jq .
+  curl -s http://10.1.0.20:8443/api | jq .
   sleep 1
 done
 ```
@@ -563,16 +563,15 @@ open http://<FRONTEND_PUBLIC_IP>:8443
 
 ```bash
 # Arrêter le serveur Node.js sur app-vm2
-ssh azureuser@10.2.0.5 "pkill -f node"
+az network bastion ssh --name bastion --resource-group $rg --auth-type password --username cloud --target-resource-id $(az vm show --name app-vm2 -g $rg --query id -o tsv)
 
-# Tester le LB (devrait router uniquement vers app-vm1)
-for i in {1..10}; do
-  curl -s http://10.2.0.250:5001/whoami | jq -r '.instance'
-done
-# Devrait retourner uniquement app-1
+cd ~/app
+sudo pkill -f server.js
 
-# Redémarrer app-vm2
-ssh azureuser@10.2.0.5 "cd /home/azureuser && node app2.js &"
+
+#Une fois les testes finis, Redémarrez le serveur node.
+sudo nohup node server.js > server.log 2>&1 &
+
 ```
 
 #### Vérifier les health probes
@@ -602,8 +601,8 @@ sudo apt-get install apache2-utils
 ab -n 10000 -c 100 http://10.2.0.250:5001/api
 
 # Vérifier les métriques après le test
-curl -s http://10.2.0.5:5001/metrics | jq .
-curl -s http://10.3.0.5:6001/metrics | jq .
+curl -s http://10.2.0.20:5001/metrics | jq .
+curl -s http://10.3.0.20:6001/metrics | jq .
 ```
 
 ## 📊 Monitoring et Métriques
@@ -617,34 +616,8 @@ Chaque service expose un endpoint `/metrics` qui retourne :
 
 Exemple :
 ```bash
-curl -s http://10.1.0.5:8443/metrics | jq .
+curl -s http://10.1.0.20:8443/metrics | jq .
 ```
-
-## 🎨 Améliorations Implémentées
-
-### 1. Interface Utilisateur
-- ✅ Design moderne avec gradient et cards
-- ✅ Animations lors des changements d'instance
-- ✅ Health checks visuels avec badges colorés
-- ✅ Layout responsive (Grid CSS)
-- ✅ Auto-refresh toutes les 3 secondes
-
-### 2. Robustesse
-- ✅ Timeouts sur toutes les requêtes HTTP (5 secondes)
-- ✅ Gestion d'erreurs complète avec messages détaillés
-- ✅ Logging structuré avec timestamps
-- ✅ Pas de blocage sur erreurs réseau
-
-### 3. Observabilité
-- ✅ Endpoint `/metrics` sur chaque service
-- ✅ Compteur de requêtes sur data layer
-- ✅ Timestamps ISO sur toutes les réponses
-- ✅ Logging console avec format structuré
-
-### 4. Sécurité et Compatibilité
-- ✅ Écoute sur 0.0.0.0 pour éviter les problèmes de binding
-- ✅ Headers Content-Type corrects
-- ✅ Gestion des CORS implicite (server-side probes)
 
 ## 🔧 Maintenance
 
@@ -658,7 +631,7 @@ ps aux | grep node
 sudo pkill -f frontend2.js  # ou app2.js, app2_b.js, data2.js, data2_b.js
 
 # Relancer le service
-cd /home/azureuser
+cd /home/cloud
 nohup node frontend2.js > frontend.log 2>&1 &
 nohup node app2.js > app.log 2>&1 &
 nohup node data2.js > data.log 2>&1 &
@@ -671,9 +644,9 @@ nohup node data2.js > data.log 2>&1 &
 sudo tail -f /var/log/cloud-init-output.log
 
 # Logs applicatifs (si lancé avec nohup)
-tail -f /home/azureuser/frontend.log
-tail -f /home/azureuser/app.log
-tail -f /home/azureuser/data.log
+tail -f /home/cloud/frontend.log
+tail -f /home/cloud/app.log
+tail -f /home/cloud/data.log
 
 # Logs système Node.js
 journalctl -u node --follow
@@ -701,8 +674,8 @@ ps aux | grep node
 ### Mettre à jour le code
 
 ```bash
-# Se connecter à la VM
-ssh azureuser@<VM-IP>
+# Se connecter à la VM à condition qu'un NAT au niveau du loadbalancer soit configuré
+ssh -p <port> cloud@lb-pub-ip-in
 
 # Sauvegarder l'ancienne version
 cp frontend2.js frontend2.js.bak
@@ -710,11 +683,11 @@ cp frontend2.js frontend2.js.bak
 # Mettre à jour depuis GitHub
 cd /tmp
 git clone https://github.com/CallmeVRM/azure-LB02.git
-cp azure-LB02/frontend/frontend2.js /home/azureuser/
+cp azure-LB02/frontend/frontend2.js /home/cloud/
 
 # Redémarrer le service
 pkill -f frontend2.js
-cd /home/azureuser
+cd /home/cloud
 nohup node frontend2.js > frontend.log 2>&1 &
 
 # Vérifier que ça fonctionne
@@ -745,7 +718,7 @@ async function getBackendPool() {
 ```javascript
 // Interroger tous les IPs d'un range et détecter les réponses
 async function discoverBackends() {
-  const range = ['10.2.0.4', '10.2.0.5', '10.2.0.6', '10.2.0.7'];
+  const range = ['10.2.0.10', '10.2.0.20', '10.2.0.6', '10.2.0.7'];
   const active = [];
   
   for (const ip of range) {
@@ -819,7 +792,7 @@ app.get('/metrics', async (req, res) => {
 
 Implémenter un round-robin côté client pour distribuer entre plusieurs backends :
 ```javascript
-const backends = ['10.2.0.4:5001', '10.2.0.5:5001'];
+const backends = ['10.2.0.10:5001', '10.2.0.20:5001'];
 let currentIndex = 0;
 
 function getNextBackend() {
@@ -894,11 +867,11 @@ class CircuitBreaker {
 
 | Layer | VM | IP Privée | Port | Instance | Fichiers | Cloud-Init |
 |-------|-----|-----------|------|----------|----------|------------|
-| **Frontend** | frontend-vm2 | 10.1.0.5 | 8443 | `frontend-2` | frontend2.js, index2.html | cloud-init-frontend2.yaml |
+| **Frontend** | frontend-vm2 | 10.1.0.20 | 8443 | `frontend-2` | frontend2.js, index2.html | cloud-init-frontend2.yaml |
 | **Frontend** | frontend-vm2_b | 10.1.0.21 | 8443 | `frontend-2_b` | frontend2_b.js, index2_b.html | cloud-init-frontend2_b.yaml |
-| **App** | app-vm2 | 10.2.0.5 | 5001 | `app-2` | app2.js | cloud-init-app2.yaml |
+| **App** | app-vm2 | 10.2.0.20 | 5001 | `app-2` | app2.js | cloud-init-app2.yaml |
 | **App** | app-vm2_b | 10.2.0.21 | 5002 | `app-2_b` | app2_b.js | cloud-init-app2_b.yaml |
-| **Data** | data-vm2 | 10.3.0.5 | 6001 | `data-2` | data2.js | cloud-init-data2.yaml |
+| **Data** | data-vm2 | 10.3.0.20 | 6001 | `data-2` | data2.js | cloud-init-data2.yaml |
 | **Data** | data-vm2_b | 10.3.0.21 | 6002 | `data-2_b` | data2_b.js | cloud-init-data2_b.yaml |
 
 ### Load Balancers
@@ -920,19 +893,19 @@ class CircuitBreaker {
 **Solutions** :
 ```bash
 # Vérifier que le serveur frontend écoute sur le port 8443
-ssh azureuser@10.1.0.5
+ssh cloud@10.1.0.20
 sudo ss -tlnp | grep 8443
 
 # Tester les probes manuellement
-curl http://10.1.0.5:8443/probe/app
-curl http://10.1.0.5:8443/probe/data
+curl http://10.1.0.20:8443/probe/app
+curl http://10.1.0.20:8443/probe/data
 
 # Vérifier les logs du frontend
-tail -f /home/azureuser/frontend.log
+tail -f /home/cloud/frontend.log
 
 # Redémarrer le service si nécessaire
 pkill -f frontend2.js
-nohup node /home/azureuser/frontend2.js > /home/azureuser/frontend.log 2>&1 &
+nohup node /home/cloud/frontend2.js > /home/cloud/frontend.log 2>&1 &
 ```
 
 ### 2. Les health checks Azure échouent
@@ -942,13 +915,13 @@ nohup node /home/azureuser/frontend2.js > /home/azureuser/frontend.log 2>&1 &
 **Solutions** :
 ```bash
 # Vérifier que l'endpoint /health répond localement
-ssh azureuser@10.2.0.5
+ssh cloud@10.2.0.20
 curl http://localhost:5001/health
 # Devrait retourner "OK"
 
 # Vérifier que le port est accessible depuis une autre VM
 # Depuis frontend-vm2
-curl http://10.2.0.5:5001/health
+curl http://10.2.0.20:5001/health
 
 # Vérifier la configuration du health probe Azure
 az network lb probe show \
@@ -974,10 +947,10 @@ ping 10.2.0.250
 ping 10.3.0.250
 
 # Tester manuellement la chaîne complète
-time curl http://10.1.0.5:8443/api
+time curl http://10.1.0.20:8443/api
 
 # Vérifier la charge CPU/RAM des VMs
-ssh azureuser@10.2.0.5
+ssh cloud@10.2.0.20
 top
 # Si CPU > 80%, considérer un redimensionnement de VM
 
@@ -992,7 +965,7 @@ top
 **Solutions** :
 ```bash
 # Vérifier les logs cloud-init
-ssh azureuser@<VM-IP>
+ssh cloud@<VM-IP>
 sudo tail -100 /var/log/cloud-init-output.log
 
 # Chercher des erreurs spécifiques
@@ -1004,7 +977,7 @@ sudo cat /var/log/cloud-init-output.log | grep -i error
 # - "Address already in use" → Port déjà occupé
 
 # Redémarrer manuellement si nécessaire
-cd /home/azureuser
+cd /home/cloud
 git clone https://github.com/CallmeVRM/azure-LB02.git
 cp azure-LB02/app/app2.js ./
 npm init -y
@@ -1077,10 +1050,10 @@ az network lb probe list \
 **Solutions** :
 ```bash
 # Se connecter à la VM
-ssh azureuser@<VM-IP>
+ssh cloud@<VM-IP>
 
 # Installer express manuellement
-cd /home/azureuser
+cd /home/cloud
 npm init -y
 npm install express
 
@@ -1146,7 +1119,7 @@ azure-LB02/
 
 ```bash
 # Tester frontend
-curl http://10.1.0.5:8443/whoami
+curl http://10.1.0.20:8443/whoami
 
 # Tester app via LB
 curl http://10.2.0.250:5001/whoami
@@ -1155,7 +1128,7 @@ curl http://10.2.0.250:5001/whoami
 curl http://10.3.0.250:6001/whoami
 
 # Tester chaîne complète
-curl http://10.1.0.5:8443/api
+curl http://10.1.0.20:8443/api
 ```
 
 ### Vérifications rapides
@@ -1178,7 +1151,7 @@ curl http://localhost:6001/health
 ```bash
 # Redémarrer tous les services
 pkill -f node
-cd /home/azureuser
+cd /home/cloud
 nohup node frontend2.js > frontend.log 2>&1 &
 nohup node app2.js > app.log 2>&1 &
 nohup node data2.js > data.log 2>&1 &

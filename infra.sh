@@ -224,8 +224,8 @@ sleep $((RANDOM % 15 == 0 ? 15 : RANDOM % 7 + 2))
 # ============================================================
 
 # Create NICs and VMs for front layer (assign static private IPs to match service bindings)
-az network nic create -g $rg -l $loc -n front-nic-vm1 --vnet-name front-vnet --subnet vm-subnet --private-ip-address 10.1.0.4
-az network nic create -g $rg -l $loc -n front-nic-vm2 --vnet-name front-vnet --subnet vm-subnet --private-ip-address 10.1.0.5
+az network nic create -g $rg -l $loc -n front-nic-vm1 --vnet-name front-vnet --subnet vm-subnet --private-ip-address 10.1.0.10
+az network nic create -g $rg -l $loc -n front-nic-vm2 --vnet-name front-vnet --subnet vm-subnet --private-ip-address 10.1.0.20
 
 
 
@@ -251,8 +251,8 @@ az vm create -g $rg -l $loc -n frontend-vm2 \
 sleep $((RANDOM % 15 == 0 ? 15 : RANDOM % 7 + 2))
 
 # Create NICs and VMs for app layer (assign static private IPs to match service bindings)
-az network nic create -g $rg -l $loc -n app-nic-vm1 --vnet-name app-vnet --subnet vm-subnet --private-ip-address 10.2.0.4
-az network nic create -g $rg -l $loc -n app-nic-vm2 --vnet-name app-vnet --subnet vm-subnet --private-ip-address 10.2.0.5
+az network nic create -g $rg -l $loc -n app-nic-vm1 --vnet-name app-vnet --subnet vm-subnet --private-ip-address 10.2.0.10
+az network nic create -g $rg -l $loc -n app-nic-vm2 --vnet-name app-vnet --subnet vm-subnet --private-ip-address 10.2.0.20
 
 sleep $((RANDOM % 7 + 2))
 
@@ -276,8 +276,8 @@ az vm create -g $rg -l $loc -n app-vm2 \
 sleep $((RANDOM % 15 == 0 ? 15 : RANDOM % 7 + 2))
 
 # Create NICs and VMs for data layer (assign static private IPs to match service bindings)
-az network nic create -g $rg -l $loc -n data-nic-vm1 --vnet-name data-vnet --subnet vm-subnet --private-ip-address 10.3.0.4
-az network nic create -g $rg -l $loc -n data-nic-vm2 --vnet-name data-vnet --subnet vm-subnet --private-ip-address 10.3.0.5
+az network nic create -g $rg -l $loc -n data-nic-vm1 --vnet-name data-vnet --subnet vm-subnet --private-ip-address 10.3.0.10
+az network nic create -g $rg -l $loc -n data-nic-vm2 --vnet-name data-vnet --subnet vm-subnet --private-ip-address 10.3.0.20
 
 sleep $((RANDOM % 7 + 2))
 
@@ -301,7 +301,7 @@ az vm create -g $rg -l $loc -n data-vm2 \
 sleep $((RANDOM % 15 == 0 ? 15 : RANDOM % 7 + 2))
 
 # Create NIC and VM for admin (static IP for admin portal)
-az network nic create -g $rg -l $loc -n admin-nic --vnet-name data-vnet --subnet vm-subnet --private-ip-address 10.3.0.10
+az network nic create -g $rg -l $loc -n admin-nic --vnet-name data-vnet --subnet vm-subnet --private-ip-address 10.3.0.100
 
 sleep $((RANDOM % 7 + 2))
 
