@@ -30,7 +30,7 @@ app.get('/probe/app-health', (_, res) => {
   http.get('http://10.2.0.250:5000/health', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
 });
 app.get('/probe/data', (_, res) => {
-  http.get('http://10.3.0.250:6000/db', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
+  http.get('http://10.3.0.250:6000/whoami', r => r.pipe(res)).on('error', () => res.status(502).send(JSON.stringify({ error: 'ERROR' })));
 });
 app.get('/probe/data-health', (_, res) => {
   http.get('http://10.3.0.250:6000/health', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));

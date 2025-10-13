@@ -26,11 +26,13 @@
   <div class="box">
     <div>App (cible du load balancer interne) : <span id="app" class="instance">-</span></div>
     <div class="small">Adresse: <span id="app-addr">-</span></div>
-    <div class="small">Response from /api: <code id="api-response">-</code></div>
+    <div class="small">Response from data/api: <code id="api-response">-</code></div>
   </div>
 
   <div class="box">
     <div>Data (backend) : <span id="data" class="instance">-</span></div>
+    <div class="small">Instance: <span id="data-instance">-</span></div>
+    <div class="small">Adresse: <span id="data-addr">-</span></div>
     <div class="small">Dernière réponse: <code id="data-response">-</code></div>
   </div>
 
@@ -61,8 +63,12 @@
       document.getElementById('app').textContent = appWho.instance || (appWho.error? 'error' : '-');
       document.getElementById('app-addr').textContent = appWho.address ? appWho.address+':'+(appWho.port||'') : '-';
 
-      const dataResp = await safeText('/probe/data');
-      document.getElementById('data-response').textContent = dataResp;
+  const dataWho = await safeJson('/probe/data');
+  // set the main Data label and the instance/address fields
+  document.getElementById('data').textContent = dataWho.instance || (dataWho.error? 'error' : '-');
+  document.getElementById('data-instance').textContent = dataWho.instance || (dataWho.error? 'error' : '-');
+  document.getElementById('data-addr').textContent = dataWho.address ? dataWho.address+':'+(dataWho.port||'') : '-';
+  document.getElementById('data-response').textContent = dataWho.error ? ('ERROR:'+dataWho.error) : (JSON.stringify(dataWho));
 
       const fHealth = await safeText('/health');
       document.getElementById('frontend-health').textContent = fHealth;
