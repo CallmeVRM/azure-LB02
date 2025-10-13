@@ -1,19 +1,6 @@
 # Azure Load Balancer - Lab Pédagogique 🎓
 
-> **Objectif** : Apprendre Azure Load Balancer en déployant une architecture 3-tiers avec répartition de charge
-
-## 📚 Table des matières
-
-1. [Introduction](#introduction)
-2. [Architecture du projet](#architecture-du-projet)
-3. [Prérequis](#prérequis)
-4. [Structure des fichiers](#structure-des-fichiers)
-5. [Concepts Azure expliqués](#concepts-azure-expliqués)
-6. [Déploiement pas à pas](#déploiement-pas-à-pas)
-7. [Fonctionnement de l'application](#fonctionnement-de-lapplication)
-8. [Tests et validation](#tests-et-validation)
-9. [Troubleshooting](#troubleshooting)
-10. [Exercices pratiques](#exercices-pratiques)
+> **Objectif** : Prise en main d'Azure Load Balancer en déployant une architecture 3-tiers avec répartition de charge
 
 ---
 
