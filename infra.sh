@@ -227,6 +227,8 @@ sleep $((RANDOM % 15 == 0 ? 15 : RANDOM % 7 + 2))
 az network nic create -g $rg -l $loc -n front-nic-vm1 --vnet-name front-vnet --subnet vm-subnet --private-ip-address 10.1.0.4
 az network nic create -g $rg -l $loc -n front-nic-vm2 --vnet-name front-vnet --subnet vm-subnet --private-ip-address 10.1.0.5
 
+
+
 sleep $((RANDOM % 7 + 2))
 
 az network nic ip-config address-pool add -g $rg --lb-name front-lb \
@@ -307,3 +309,17 @@ az vm create -g $rg -l $loc -n admin-vm \
     --nics admin-nic --image Ubuntu2404 \
     --admin-username $adminUser --admin-password $adminPass \
     --custom-data @admin/cloud-init-admin.yaml --size Standard_B1s
+
+
+#Ajout de VMs supplémentaires pour test de répartition de charge
+az network nic create -g $rg -l $loc -n front-nic-vm2_b --vnet-name front-vnet --subnet vm-subnet --private-ip-address 10.1.0.21
+
+az network nic ip-config address-pool add -g $rg --lb-name front-lb \
+    --address-pool front-backpool --nic-name front-nic-vm2_b --ip-config-name ipconfig1
+
+sleep $((RANDOM % 7 + 2))
+
+az vm create -g $rg -l $loc -n frontend-vm2_b \
+    --nics front-nic-vm2_b --image Ubuntu2404 \
+    --admin-username $adminUser --admin-password $adminPass \
+    --custom-data @frontend/cloud-init-frontend2_b.yaml --size Standard_B1s
