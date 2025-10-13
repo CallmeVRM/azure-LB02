@@ -9,6 +9,7 @@ runcmd:
   - git clone https://github.com/CallmeVRM/azure-LB02 /tmp/lab
   - cp /tmp/lab/frontend/frontend2.js /home/cloud/frontend/server.js
   - cp /tmp/lab/frontend/index2.html /home/cloud/frontend/index2.html
+  - chown -R cloud:cloud /home/cloud/frontend
   - cd /home/cloud/frontend
   - npm init -y
   - npm install express

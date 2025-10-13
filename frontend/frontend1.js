@@ -3,7 +3,7 @@ const http = require('http');
 const path = require('path');
 const app = express();
 
-const APP_LAYER = 'http://10.2.0.10:5000'; // Load Balancer App Layer
+const APP_LAYER = 'http://10.2.0.250:5000'; // Load Balancer App Layer (actual LB IP)
 const PORT = 80;
 
 // Serve the per-frontend static HTML
@@ -24,16 +24,16 @@ app.get('/health', (_, res) => res.send('OK'));
 
 // Server-side probe endpoints (avoid CORS in browser)
 app.get('/probe/app', (_, res) => {
-  http.get('http://10.2.0.10:5000/whoami', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
+  http.get('http://10.2.0.250:5000/whoami', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
 });
 app.get('/probe/app-health', (_, res) => {
-  http.get('http://10.2.0.10:5000/health', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
+  http.get('http://10.2.0.250:5000/health', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
 });
 app.get('/probe/data', (_, res) => {
-  http.get('http://10.3.0.10:6000/db', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
+  http.get('http://10.3.0.250:6000/db', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
 });
 app.get('/probe/data-health', (_, res) => {
-  http.get('http://10.3.0.10:6000/health', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
+  http.get('http://10.3.0.250:6000/health', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
 });
 
 app.listen(PORT, '10.1.0.4', () =>

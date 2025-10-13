@@ -8,6 +8,7 @@ runcmd:
   - mkdir -p /home/cloud/data
   - git clone https://github.com/CallmeVRM/azure-LB02 /tmp/lab
   - cp /tmp/lab/data/data2.js /home/cloud/data/server.js
+  - chown -R cloud:cloud /home/cloud/data
   - cd /home/cloud/data
   - npm init -y
   - npm install express
