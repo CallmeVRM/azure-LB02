@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 // Configuration
-const PORT = 6002;
+const PORT = 6001;
 const INSTANCE_NAME = 'data-2_b';
 
 // Middleware

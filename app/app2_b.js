@@ -3,8 +3,8 @@ const http = require('http');
 const app = express();
 
 // Configuration
-const DATA_LAYER = 'http://10.3.0.250:6002';
-const PORT = 5002;
+const DATA_LAYER = 'http://10.3.0.250:6001';
+const PORT = 5001;
 const REQUEST_TIMEOUT = 5000;
 
 // Middleware

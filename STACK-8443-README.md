@@ -1150,9 +1150,10 @@ curl http://localhost:6001/health
 
 ```bash
 # Redémarrer tous les services
-pkill -f node
-cd /home/cloud
-nohup node frontend2.js > frontend.log 2>&1 &
+
+cd /home/cloud/dossier
+sudo pkill -f server.js
+nohup node server.js > server.log 2>&1 &
 nohup node app2.js > app.log 2>&1 &
 nohup node data2.js > data.log 2>&1 &
 ```

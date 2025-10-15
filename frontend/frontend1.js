@@ -36,6 +36,6 @@ app.get('/probe/data-health', (_, res) => {
   http.get('http://10.3.0.250:6000/health', r => r.pipe(res)).on('error', () => res.status(502).send('ERROR'));
 });
 
-app.listen(PORT, '10.1.0.4', () =>
-  console.log(`Frontend-1 listening on http://10.1.0.4:${PORT}`)
+app.listen(PORT, '0.0.0.0', () =>
+  console.log(`Frontend-1 listening on http://0.0.0.0:${PORT}`)
 );
