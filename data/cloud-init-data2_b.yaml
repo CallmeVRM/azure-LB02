@@ -1,12 +1,9 @@
 #cloud-config
-
 package_update: true
-
 packages:
   - nodejs
   - npm
   - git
-
 runcmd:
   - mkdir -p /home/cloud/data
   - git clone https://github.com/CallmeVRM/azure-LB02 /tmp/lab
@@ -15,5 +12,26 @@ runcmd:
   - cd /home/cloud/data
   - npm init -y
   - npm install express
-  - node /home/cloud/data/server.js &
-  - echo "Data-2_b server is running on port 6002"
+  - |
+    cat > /etc/systemd/system/data2_b.service << 'SERVICEOF'
+    [Unit]
+    Description=Data-2_b Node.js Server (Port 6002)
+    After=network.target
+    
+    [Service]
+    Type=simple
+    User=cloud
+    WorkingDirectory=/home/cloud/data
+    ExecStart=/usr/bin/node /home/cloud/data/server.js
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    
+    [Install]
+    WantedBy=multi-user.target
+    SERVICEOF
+  - systemctl daemon-reload
+  - systemctl enable data2_b
+  - systemctl start data2_b
+  - echo "Data-2_b service created and started on port 6002"

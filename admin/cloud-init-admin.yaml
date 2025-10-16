@@ -13,5 +13,26 @@ runcmd:
   - cd /home/cloud/admin
   - npm init -y
   - npm install express
-  - node /home/cloud/admin/server.js &
-  - echo "Admin server is running on port 7000"
+  - |
+    cat > /etc/systemd/system/admin.service << 'SERVICEOF'
+    [Unit]
+    Description=Admin Dashboard Node.js Server (Port 7000)
+    After=network.target
+    
+    [Service]
+    Type=simple
+    User=cloud
+    WorkingDirectory=/home/cloud/admin
+    ExecStart=/usr/bin/node /home/cloud/admin/server.js
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    
+    [Install]
+    WantedBy=multi-user.target
+    SERVICEOF
+  - systemctl daemon-reload
+  - systemctl enable admin
+  - systemctl start admin
+  - echo "Admin service created and started on port 7000"
