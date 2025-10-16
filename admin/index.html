@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin - POC Load Balancer</title>
+  <style>
+    body{font-family:system-ui,Arial;max-width:1000px;margin:24px auto}
+    table{width:100%;border-collapse:collapse}
+    th,td{border:1px solid #ddd;padding:8px;text-align:left}
+    th{background:#f5f7fa}
+    .ok{color:green}
+    .bad{color:crimson}
+  </style>
+</head>
+<body>
+  <h1>Admin - Visualisation centralisée</h1>
+  <p class="small">Cette page interroge /probe côté serveur pour obtenir l'état des trois couches.</p>
+
+  <div id="info"></div>
+  <table>
+    <thead>
+      <tr><th>Layer</th><th>Host</th><th>Whoami</th><th>Health</th></tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <script>
+    async function fetchProbe(){
+      try{
+        const r=await fetch('/probe',{cache:'no-store'});
+        if(!r.ok)throw new Error('Probe failed');
+        return await r.json();
+      }catch(e){return {error:e.message}};
+    }
+
+    function render(data){
+      const rows = document.getElementById('rows'); rows.innerHTML='';
+      if(data.error){document.getElementById('info').textContent='Error: '+data.error; return}
+      document.getElementById('info').textContent='Updated: '+data.timestamp;
+      for(const layer of ['frontend','app','data']){
+        for(const item of data[layer]){
+          const tr=document.createElement('tr');
+          const who = item.who ? item.who : '-';
+          const health = item.health ? item.health : '-';
+          tr.innerHTML=`<td>${layer}</td><td>${item.host}:${item.port}</td><td>${who}</td><td class="${item.healthOk?'ok':'bad'}">${health}</td>`;
+          rows.appendChild(tr);
+        }
+      }
+    }
+
+    async function update(){const d=await fetchProbe(); render(d);} 
+    update(); setInterval(update,3000);
+  </script>
+</body>
+</html>

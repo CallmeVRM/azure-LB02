@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>POC LB - Frontend 1</title>
+  <style>
+    body { font-family: system-ui, Arial; max-width:900px; margin:40px auto; }
+    h1 { color:#0366d6 }
+    .box { border:1px solid #ddd; padding:12px; border-radius:6px; margin-bottom:12px }
+    .instance { font-weight:700 }
+    .small { color:#666; font-size:0.9em }
+    .status-ok { color:green }
+    .status-bad { color:crimson }
+  </style>
+</head>
+<body>
+  <h1>POC - Visualisation (Frontend 1)</h1>
+  <p class="small">Cette page est servie par <strong>Frontend 1</strong>. Elle interroge les couches App et Data via des probes serveur pour afficher l'instance active.</p>
+
+  <div class="box">
+    <div>Frontend (page servie par) : <span id="frontend" class="instance">-</span></div>
+    <div class="small">Adresse: <span id="frontend-addr">-</span></div>
+  </div>
+
+  <div class="box">
+    <div>App (cible du load balancer interne) : <span id="app" class="instance">-</span></div>
+    <div class="small">Adresse: <span id="app-addr">-</span></div>
+    <div class="small">Response from data/api: <code id="api-response">-</code></div>
+  </div>
+
+  <div class="box">
+    <div>Data (backend) : <span id="data" class="instance">-</span></div>
+    <div class="small">Instance: <span id="data-instance">-</span></div>
+    <div class="small">Adresse: <span id="data-addr">-</span></div>
+    <div class="small">Dernière réponse: <code id="data-response">-</code></div>
+  </div>
+
+  <div class="box">
+    <div>Status checks:</div>
+    <ul>
+      <li>Frontend health: <span id="frontend-health">-</span></li>
+      <li>App health: <span id="app-health">-</span></li>
+      <li>Data health: <span id="data-health">-</span></li>
+    </ul>
+  </div>
+
+  <script>
+    async function safeJson(url){
+      try{const r=await fetch(url,{cache:'no-store'}); if(!r.ok)throw new Error(r.statusText); return await r.json()}catch(e){return {error:e.message}}}
+    async function safeText(url){
+      try{const r=await fetch(url,{cache:'no-store'}); if(!r.ok)throw new Error(r.statusText); return await r.text()}catch(e){return 'ERROR:'+e.message}}
+
+    async function update(){
+      const who = await safeJson('/whoami');
+      document.getElementById('frontend').textContent = who.instance || 'unknown';
+      document.getElementById('frontend-addr').textContent = who.address ? who.address+':'+(who.port||'') : '-';
+
+      const apiText = await safeText('/api');
+      document.getElementById('api-response').textContent = apiText;
+
+      const appWho = await safeJson('/probe/app');
+      document.getElementById('app').textContent = appWho.instance || (appWho.error? 'error' : '-');
+      document.getElementById('app-addr').textContent = appWho.address ? appWho.address+':'+(appWho.port||'') : '-';
+
+  const dataWho = await safeJson('/probe/data');
+  // set the main Data label and the instance/address fields
+  document.getElementById('data').textContent = dataWho.instance || (dataWho.error? 'error' : '-');
+  document.getElementById('data-instance').textContent = dataWho.instance || (dataWho.error? 'error' : '-');
+  document.getElementById('data-addr').textContent = dataWho.address ? dataWho.address+':'+(dataWho.port||'') : '-';
+  document.getElementById('data-response').textContent = dataWho.error ? ('ERROR:'+dataWho.error) : (JSON.stringify(dataWho));
+
+      const fHealth = await safeText('/health');
+      document.getElementById('frontend-health').textContent = fHealth;
+      document.getElementById('frontend-health').className = fHealth==='OK' ? 'status-ok' : 'status-bad';
+
+      const aHealth = await safeText('/probe/app-health');
+      document.getElementById('app-health').textContent = aHealth;
+      document.getElementById('app-health').className = aHealth==='OK' ? 'status-ok' : 'status-bad';
+
+      const dHealth = await safeText('/probe/data-health');
+      document.getElementById('data-health').textContent = dHealth;
+      document.getElementById('data-health').className = dHealth==='OK' ? 'status-ok' : 'status-bad';
+    }
+
+    update(); setInterval(update,3000);
+  </script>
+</body>
+</html>

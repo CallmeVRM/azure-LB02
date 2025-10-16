@@ -1,0 +1,17 @@
+#cloud-config
+package_update: true
+packages:
+  - nodejs
+  - npm
+  - git
+runcmd:
+  - mkdir -p /home/cloud/admin
+  - git clone https://github.com/CallmeVRM/azure-LB02 /tmp/lab
+  - cp /tmp/lab/admin/admin.js /home/cloud/admin/server.js
+  - cp /tmp/lab/admin/index.html /home/cloud/admin/index.html
+  - chown -R cloud:cloud /home/cloud/admin
+  - cd /home/cloud/admin
+  - npm init -y
+  - npm install express
+  - node /home/cloud/admin/server.js &
+  - echo "Admin server is running on port 7000"
