@@ -4,7 +4,15 @@
 
 ---
 
-## 📖 Introduction
+## � Documentation
+
+> **📘 DOCUMENTATION COMPLÈTE** : Pour une documentation exhaustive incluant systemd, storage images, troubleshooting et référence rapide, consultez **[DOCUMENTATION-COMPLETE.md](./DOCUMENTATION-COMPLETE.md)**
+
+Ce README contient l'essentiel pour démarrer rapidement. Pour les détails avancés (gestion systemd, intégration Azure Storage, troubleshooting complet), référez-vous à la documentation complète.
+
+---
+
+## �📖 Introduction
 
 Ce projet est un **laboratoire pratique** pour comprendre et maîtriser **Azure Load Balancer**. Vous allez déployer une application web à 3 couches (Frontend, Application, Data) avec des Load Balancers pour distribuer le trafic entre plusieurs serveurs.
 

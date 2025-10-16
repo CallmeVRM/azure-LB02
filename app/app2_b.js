@@ -43,6 +43,24 @@ app.get('/whoami', (req, res) => {
 
 app.get('/health', (_, res) => res.send('OK'));
 
+// ============================================================
+// Storage Image Endpoint
+// ============================================================
+
+// Get App image (from storage account app-vnet, blob container)
+app.get('/image/app', async (_, res) => {
+  console.log('[INFO] /image/app requested from app-2_b');
+  res.setHeader('Content-Type', 'image/jpeg');
+  // TODO: Fetch from Azure Storage Account (via private endpoint)
+  // For now, return a placeholder or error
+  res.status(503).json({ 
+    error: 'Storage not yet implemented',
+    message: 'Image storage integration pending',
+    source: 'Storage Account (App VNet) - Blob Container',
+    instance: 'app-2_b'
+  });
+});
+
 // Proxy vers la couche Data
 app.get('/api', async (_, res) => {
   try {
