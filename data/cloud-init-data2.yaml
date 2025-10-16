@@ -12,5 +12,26 @@ runcmd:
   - cd /home/cloud/data
   - npm init -y
   - npm install express
-  - node /home/cloud/data/server.js &
-  - echo "Data server is running on port 6000"
+  - |
+    cat > /etc/systemd/system/data2.service << 'SERVICEOF'
+    [Unit]
+    Description=Data-2 Node.js Server (Port 6001)
+    After=network.target
+    
+    [Service]
+    Type=simple
+    User=cloud
+    WorkingDirectory=/home/cloud/data
+    ExecStart=/usr/bin/node /home/cloud/data/server.js
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    
+    [Install]
+    WantedBy=multi-user.target
+    SERVICEOF
+  - systemctl daemon-reload
+  - systemctl enable data2
+  - systemctl start data2
+  - echo "Data-2 service created and started on port 6001"

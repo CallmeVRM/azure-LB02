@@ -13,5 +13,27 @@ runcmd:
   - cd /home/cloud/frontend
   - npm init -y
   - npm install express
-  - node /home/cloud/frontend/server.js &
-  - echo "Frontend server is running on port 3000"
+  - |
+    cat > /etc/systemd/system/frontend1.service << 'SERVICEOF'
+    [Unit]
+    Description=Frontend-1 server.js Server (Port 80)
+    After=network.target
+    
+    [Service]
+    Type=simple
+    User=cloud
+    WorkingDirectory=/home/cloud/frontend
+    ExecStart=/usr/bin/node /home/cloud/frontend/server.js
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    AmbientCapabilities=CAP_NET_BIND_SERVICE
+    
+    [Install]
+    WantedBy=multi-user.target
+    SERVICEOF
+  - systemctl daemon-reload
+  - systemctl enable frontend1
+  - systemctl start frontend1
+  - echo "Frontend-1 service created and started on port 80"

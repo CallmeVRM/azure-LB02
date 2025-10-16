@@ -12,5 +12,26 @@ runcmd:
   - cd /home/cloud/app
   - npm init -y
   - npm install express
-  - node /home/cloud/app/server.js &
-  - echo "App server is running on port 5000"
+  - |
+    cat > /etc/systemd/system/app1.service << 'SERVICEOF'
+    [Unit]
+    Description=App-1 Node.js Server (Port 5000)
+    After=network.target
+    
+    [Service]
+    Type=simple
+    User=cloud
+    WorkingDirectory=/home/cloud/app
+    ExecStart=/usr/bin/node /home/cloud/app/server.js
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    
+    [Install]
+    WantedBy=multi-user.target
+    SERVICEOF
+  - systemctl daemon-reload
+  - systemctl enable app1
+  - systemctl start app1
+  - echo "App-1 service created and started on port 5000"

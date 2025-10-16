@@ -332,6 +332,7 @@ az vm create -g $rg -l $loc -n frontend-vm2_b \
     --admin-username $adminUser --admin-password $adminPass \
     --custom-data @frontend/cloud-init-frontend2_b.yaml --size Standard_B1s
 
+sleep $((RANDOM % 7 + 2))
 
 ##########################################
 ########### APP RAJOUT          ##########
@@ -351,6 +352,7 @@ az vm create -g $rg -l $loc -n app-vm2_b \
     --admin-username $adminUser --admin-password $adminPass \
     --custom-data @app/cloud-init-app2_b.yaml --size Standard_B1s
 
+sleep $((RANDOM % 7 + 2))
 
 
 ##########################################
@@ -370,3 +372,5 @@ az vm create -g $rg -l $loc -n data-vm2_b \
     --nics data-nic-vm2_b --image Ubuntu2404 \
     --admin-username $adminUser --admin-password $adminPass \
     --custom-data @data/cloud-init-data2_b.yaml --size Standard_B1s
+
+sleep $((RANDOM % 7 + 2))
